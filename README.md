@@ -3,7 +3,7 @@
 ### Install
 
 ```
-go get github.com/everFinance/goar
+go get github.com/permadao/goar
 ```
 
 ### Example
