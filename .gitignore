@@ -1,0 +1,5 @@
+go.sum
+test-keyfile.json
+.DS_Store
+.idea
+vendor
