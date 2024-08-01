@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"math/big"
 	"github.com/permadao/goar/schema"
-	"github.com/everVision/goar"
+	"github.com/permadao/goar"
 )
 
 func main() {
