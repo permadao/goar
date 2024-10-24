@@ -10,10 +10,10 @@ import (
 )
 
 type Bundler struct {
-	signType   int
-	signer     interface{}
-	owner      string // only rsa has owner
-	signerAddr string
+	SignType int
+	signer   interface{}
+	Owner    string // only rsa has owner
+	Address  string
 }
 
 func NewBundler(signer interface{}) (*Bundler, error) {
@@ -22,10 +22,10 @@ func NewBundler(signer interface{}) (*Bundler, error) {
 		return nil, err
 	}
 	return &Bundler{
-		signType:   signType,
-		signer:     signer,
-		owner:      owner,
-		signerAddr: signerAddr,
+		SignType: signType,
+		signer:   signer,
+		Owner:    owner,
+		Address:  signerAddr,
 	}, nil
 }
 
@@ -35,7 +35,7 @@ func (b *Bundler) Sign(item *schema.BundleItem) error {
 		return err
 	}
 	var sigData []byte
-	switch b.signType {
+	switch b.SignType {
 	case schema.ArweaveSignType:
 		arSigner, ok := b.signer.(*Signer)
 		if !ok {
@@ -66,7 +66,7 @@ func (b *Bundler) Sign(item *schema.BundleItem) error {
 }
 
 func (b *Bundler) CreateAndSignItem(data []byte, target string, anchor string, tags []schema.Tag) (bItem schema.BundleItem, err error) {
-	item, err := utils.NewBundleItem(b.owner, b.signType, target, anchor, data, tags)
+	item, err := utils.NewBundleItem(b.Owner, b.SignType, target, anchor, data, tags)
 	if err != nil {
 		return
 	}
