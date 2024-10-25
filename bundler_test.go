@@ -87,6 +87,22 @@ func TestNestBundle(t *testing.T) {
 		assert.NoError(t, utils.VerifyBundleItem(item))
 	}
 
+	item33 := resBundle.Items[1]
+	_, err = utils.DecodeBundleItem(item33.Binary)
+	assert.NoError(t, err)
+
+	nestItem := resBundle.Items[0]
+	nestItemA, err := utils.DecodeBundleItem(nestItem.Binary)
+	assert.NoError(t, err)
+	t.Log(nestItemA.Tags)
+
+	nestBundleBinary, err := utils.Base64Decode(nestItemA.Data)
+	assert.NoError(t, err)
+	bd, err := utils.DecodeBundle(nestBundleBinary)
+	assert.NoError(t, err)
+	assert.Equal(t, item1.Data, bd.Items[0].Data)
+	assert.Equal(t, item2.Data, bd.Items[1].Data)
+
 	// send to arweave
 	// wal, err := NewWalletFromPath("test-keyfile.json", "https://arweave.net")
 	// assert.NoError(t, err)
