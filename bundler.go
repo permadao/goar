@@ -71,7 +71,7 @@ func (b *Bundler) CreateAndSignItem(data []byte, target string, anchor string, t
 		return
 	}
 	// sign
-	if err = b.Sign(item); err != nil {
+	if err = b.Sign(&item); err != nil {
 		return
 	}
 	// get itemBinary
@@ -80,7 +80,7 @@ func (b *Bundler) CreateAndSignItem(data []byte, target string, anchor string, t
 		return
 	}
 	item.Binary = itemBinary
-	return *item, nil
+	return item, nil
 }
 
 func (b *Bundler) CreateAndSignNestedItem(target string, anchor string, tags []schema.Tag, items ...schema.BundleItem) (schema.BundleItem, error) {

@@ -1145,7 +1145,7 @@ func (c *Client) GetBundleItems(bundleInId string, itemsIds []string) (items []*
 				return nil, err
 			}
 
-			items = append(items, item)
+			items = append(items, &item)
 		}
 		// next itemBy start offset
 		bundleItemStart += itemBinaryLength

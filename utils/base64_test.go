@@ -34,7 +34,7 @@ func TestBase64Decode(t *testing.T) {
 	}
 	// err = utils.VerifyBundleItem(item)
 	// assert.NoError(t, err)
-	itemBinary, err := GenerateItemBinary(&item)
+	itemBinary, err := GenerateItemBinary(item)
 	assert.NoError(t, err)
 	i, err := DecodeBundleItem(itemBinary)
 	assert.NoError(t, err)
