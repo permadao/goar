@@ -15,6 +15,22 @@ type Wallet struct {
 	Signer *Signer
 }
 
+func NewWallet(b []byte, clientUrl string, proxyUrl ...string) (w *Wallet, err error) {
+	signer, err := NewSigner(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewWalletWithSigner(signer, clientUrl, proxyUrl...), nil
+}
+
+func NewWalletWithSigner(signer *Signer, clientUrl string, proxyUrl ...string) *Wallet {
+	return &Wallet{
+		Client: NewClient(clientUrl, proxyUrl...),
+		Signer: signer,
+	}
+}
+
 // proxyUrl: option
 func NewWalletFromPath(path string, clientUrl string, proxyUrl ...string) (*Wallet, error) {
 	b, err := os.ReadFile(path)
@@ -25,18 +41,13 @@ func NewWalletFromPath(path string, clientUrl string, proxyUrl ...string) (*Wall
 	return NewWallet(b, clientUrl, proxyUrl...)
 }
 
-func NewWallet(b []byte, clientUrl string, proxyUrl ...string) (w *Wallet, err error) {
-	signer, err := NewSigner(b)
+func NewWalletFrom(path string, clientUrl string, proxyUrl ...string) (*Wallet, error) {
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	w = &Wallet{
-		Client: NewClient(clientUrl, proxyUrl...),
-		Signer: signer,
-	}
-
-	return
+	return NewWallet(b, clientUrl, proxyUrl...)
 }
 
 func (w *Wallet) Owner() string {
