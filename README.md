@@ -142,6 +142,102 @@ arWallet := NewWalletFromPath("./keyfile.json", "https://arweave.net", proxyUrl)
 signer := goar.NewSignerFromPath("./keyfile.json")
 ```
 
+#### ECDSA Signer
+
+ECDSA signer provides secp256k1-based signing for Arweave transactions using ECDSA private keys.
+
+- [x] SignTx - Sign Arweave transactions with ECDSA
+- [x] Owner - Get compressed public key as owner
+- [x] Address - Get Arweave address from public key
+- [x] VerifyEcdsaTxSig - Verify ECDSA transaction signatures
+- [x] GetEcdsaTxOwner - Extract owner from signed transaction
+- [x] OwnerToAddress - Convert owner to Arweave address
+
+Initialize ECDSA signer with hex private key:
+
+```golang
+// Create ECDSA signer from hex private key
+privateKey := "ccb43edab9f7fd5c24388c43579b9d50ad3c8d94cf5fce9bb0bcb8e6ddb57bce"
+ecSigner, err := goar.NewEcSigner(privateKey)
+if err != nil {
+    panic(err)
+}
+
+// Get signer address
+address := ecSigner.Address()
+fmt.Println("Address:", address)
+
+// Get owner (compressed public key)
+owner := ecSigner.Owner()
+fmt.Println("Owner:", owner)
+```
+
+Sign and submit ECDSA transaction:
+
+```golang
+// Create transaction
+tx := &schema.Transaction{
+    Format: 2,
+    LastTx: "5Yx84D8oaCAlPqMe7vmDGuEwXtIOy_rMOHlpgm7yovYoW__Mj8S2gC8UuWmLs-61",
+    Owner:  "",
+    Tags: []schema.Tag{
+        {Name: "VGVzdA", Value: "ZWNkc2EtdHg"},
+    },
+    Target:    "cSYOy8-p1QFenktkDBFyRM3cwZSTrQ_J4EsELLho_UE",
+    Quantity:  "100000000",
+    Data:      "",
+    DataSize:  "0",
+    DataRoot:  "",
+    Reward:    "7050359",
+    Signature: "",
+}
+
+// Sign transaction
+err = ecSigner.SignTx(tx)
+if err != nil {
+    panic(err)
+}
+
+fmt.Println("Transaction ID:", tx.ID)
+fmt.Println("Signature:", tx.Signature)
+
+// Verify signature
+err = goar.VerifyEcdsaTxSig(tx)
+if err != nil {
+    panic(err)
+}
+
+// Submit to Arweave network
+client := goar.NewClient("https://arweave.net")
+status, code, err := client.SubmitTransaction(tx)
+fmt.Println("Status:", status, "Code:", code)
+```
+
+Verify existing ECDSA transaction:
+
+```golang
+// Verify transaction signature
+err = goar.VerifyEcdsaTxSig(tx)
+if err != nil {
+    panic(err)
+}
+
+// Extract owner from signed transaction
+owner, err := goar.GetEcdsaTxOwner(tx)
+if err != nil {
+    panic(err)
+}
+
+// Convert owner to address
+address, err := goar.OwnerToAddress(owner)
+if err != nil {
+    panic(err)
+}
+
+fmt.Println("Owner:", owner)
+fmt.Println("Address:", address)
+```
+
 #### Utils
 
 Package for Arweave develop toolkit.
